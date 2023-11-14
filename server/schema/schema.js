@@ -39,50 +39,64 @@ const ClientType = new GraphQLObjectType({
   }),
 });
 
+// GQL Object for querying database
 const RootQuery = new GraphQLObjectType({
   name: "RootQueryType",
   fields: {
+    // Get all clients
     clients: {
+      // Return list of clients
       type: new GraphQLList(ClientType),
       resolve: async (parent, args) => {
+        // mongoose find
         return await Client.find();
       },
     },
+    // Get one client by ID
     client: {
       type: ClientType,
       args: { id: { type: GraphQLID } },
       resolve: async (parent, args) => {
+        // mongoose findById
         return await Client.findById(args.id);
       },
     },
+    // Get all projects
     projects: {
       type: new GraphQLList(ProjectType),
       resolve: async (parent, args) => {
+        // mongoose find
         return await Project.find();
       },
     },
+    // Get one project by ID
     project: {
       type: ProjectType,
       args: { id: { type: GraphQLID } },
       resolve: async (parent, args) => {
+        // mongoose findById
         return await Project.findById(args.id);
       },
     },
   },
 });
 
+// GQL Object for mutating database
 const mutation = new GraphQLObjectType({
   name: "Mutation",
   fields: {
     // Add a client
     addClient: {
+      // Return type
       type: ClientType,
+      // need to pass in name, email and phone
       args: {
         name: { type: GraphQLNonNull(GraphQLString) },
         email: { type: GraphQLNonNull(GraphQLString) },
         phone: { type: GraphQLNonNull(GraphQLString) },
       },
       resolve: (parent, args) => {
+        // Insert new document into Client collection
         const client = new Client({
           name: args.name,
           email: args.email,
@@ -95,6 +109,7 @@ const mutation = new GraphQLObjectType({
     // Delete a client
     deleteClient: {
       type: ClientType,
+      // Delete through ID
       args: {
         id: { type: GraphQLNonNull(GraphQLID) },
       },
@@ -105,6 +120,8 @@ const mutation = new GraphQLObjectType({
     // Add a project
     addProject: {
       type: ProjectType,
+      // Need to pass in name, desc, clientId (refering to its respective client)
+      // Status is optional as there is a default value to insert if is not given
       args: {
         name: { type: GraphQLNonNull(GraphQLString) },
         description: { type: GraphQLNonNull(GraphQLString) },
@@ -144,6 +161,7 @@ const mutation = new GraphQLObjectType({
     // Update a project
     updateProject: {
       type: ProjectType,
+      // ID is required, where other fields are optional
       args: {
         id: { type: GraphQLNonNull(GraphQLID) },
         name: { type: GraphQLString },
@@ -169,6 +187,7 @@ const mutation = new GraphQLObjectType({
               status: args.status,
             },
           },
+          // if not exist, create a new document for it
           { new: true }
         );
       },

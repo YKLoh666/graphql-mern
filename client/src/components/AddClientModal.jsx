@@ -5,10 +5,13 @@ import { useMutation } from "@apollo/client";
 import { GET_CLIENTS } from "../queries/clientQueries";
 
 const AddClientModal = () => {
+  // Form control states
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
 
+  // useMutation hook, take in the value from the form
+  // Upon addClient called, the mutation is made and the cache will be updated respectively
   const [addClient] = useMutation(ADD_CLIENT, {
     variables: { name, email, phone },
     update(cache, { data: { addClient } }) {
@@ -20,15 +23,19 @@ const AddClientModal = () => {
     },
   });
 
+  // Called when form submitted
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    // Validation
     if (name === "" || email === "" || phone === "") {
       return alert("Please fill in all fields");
     }
 
+    // Call mutation
     addClient(name, email, phone);
 
+    // Empty form controls
     setName("");
     setEmail("");
     setPhone("");

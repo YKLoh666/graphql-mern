@@ -11,6 +11,7 @@ const ProjectSchema = mongoose.Schema({
     type: String,
     enum: ["Not Started", "In Progress", "Completed"],
   },
+  // value is referencing Client collection through Client ID
   clientId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Client",
