@@ -33,7 +33,7 @@ const AddProjectModal = () => {
     e.preventDefault();
 
     // Validation
-    if (name === "" || description === "") {
+    if (name === "" || description === "" || status === "" || clientId === "") {
       return alert("Please fill in all fields");
     }
 
@@ -136,7 +136,9 @@ const AddProjectModal = () => {
                         className="form-select"
                         value={clientId}
                         onChange={(e) => setClientId(e.target.value)}
+                        onKeyDown={(e) => setClientId(e.target.value)}
                       >
+                        <option value="">Select client</option>
                         {data.clients.map((client) => (
                           <option key={client.id} value={client.id}>
                             {client.name}
