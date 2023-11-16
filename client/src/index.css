@@ -45,6 +45,28 @@ code {
   opacity: 0.9;
 }
 
+.link-primary {
+  color: #df3ca6 !important;
+  text-decoration-color: #df3ca6 !important;
+}
+
+.link-primary:hover {
+  color: #df3ca6 !important;
+  text-decoration-color: #df3ca6 !important;
+  opacity: 0.9;
+}
+
+.link-secondary {
+  color: #7430f9 !important;
+  text-decoration-color: #7430f9 !important;
+}
+
+.link-secondary:hover {
+  color: #7430f9 !important;
+  text-decoration-color: #7430f9 !important;
+  opacity: 0.9;
+}
+
 .icon {
   margin-right: 5px;
 }
