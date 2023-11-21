@@ -88,13 +88,13 @@ const AddProjectModal = () => {
                 <div className="modal-body">
                   <form onSubmit={handleSubmit}>
                     <div className="mb-3">
-                      <label className="form-label" htmlFor="name">
+                      <label className="form-label" htmlFor="project-name">
                         Name
                       </label>
                       <input
                         type="text"
                         className="form-control"
-                        id="name"
+                        id="project-name"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         autoComplete="off"
@@ -128,7 +128,7 @@ const AddProjectModal = () => {
                       </select>
                     </div>
                     <div className="mb-3">
-                      <label htmlFor="client" className="form-label">
+                      <label htmlFor="clientId" className="form-label">
                         Client
                       </label>
                       <select
