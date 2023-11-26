@@ -61,7 +61,7 @@ const LoginForm = () => {
             className="form-control"
             autoComplete="off"
             value={confirmPassword}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => setConfirmPassword(e.target.value)}
           />
         </div>
         <div className="d-flex justify-content-between my-4 align-items-center">

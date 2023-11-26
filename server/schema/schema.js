@@ -1,5 +1,6 @@
 import Client from "../models/Client.js";
 import Project from "../models/Project.js";
+import bcrypt from "bcryptjs";
 
 import {
   GraphQLObjectType,
@@ -10,6 +11,7 @@ import {
   GraphQLNonNull,
   GraphQLEnumType,
 } from "graphql";
+import User from "../models/User.js";
 
 // Project Type
 const ProjectType = new GraphQLObjectType({
@@ -36,6 +38,15 @@ const ClientType = new GraphQLObjectType({
     name: { type: GraphQLString },
     email: { type: GraphQLString },
     phone: { type: GraphQLString },
+  }),
+});
+
+const UserType = new GraphQLObjectType({
+  name: "User",
+  fields: () => ({
+    id: { type: GraphQLID },
+    email: { type: GraphQLString },
+    password: { type: GraphQLString },
   }),
 });
 
@@ -192,6 +203,31 @@ const mutation = new GraphQLObjectType({
           // if not exist, create a new document for it
           { new: true }
         );
+      },
+    },
+    // Create User
+    createUser: {
+      type: UserType,
+      args: {
+        email: { type: GraphQLNonNull(GraphQLString) },
+        password: { type: GraphQLNonNull(GraphQLString) },
+      },
+      resolve: async (parent, args) => {
+        if (User.find({ email: args.email })) return { failed: true };
+
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(args.password, salt);
+
+        console.log(hashedPassword);
+
+        const user = new User({
+          email: args.email,
+          password: hashedPassword,
+        });
+
+        const newUser = await user.save();
+
+        return { id: newUser.id, email: newUser.email };
       },
     },
   },

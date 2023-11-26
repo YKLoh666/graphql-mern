@@ -1,19 +1,70 @@
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { FaUser } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
+const verify = async (navigate) => {
+  try {
+    const response = await axios.get("http://localhost:5000/auth", {
+      withCredentials: true,
+    });
+
+    const { verified } = response.data;
+
+    if (verified) {
+      // Token is verified, navigate to the desired location
+      navigate("/");
+    }
+  } catch (error) {
+    // Handle Axios request errors
+    console.error("Axios request failed:", error);
+
+    // Check the error response, if available
+    if (error.response) {
+      console.error("Error response data:", error.response.data);
+    }
+
+    // Handle the case where verification failed due to an error
+    console.log("Verification failed due to an error.");
+  }
+};
 
 const LoginForm = () => {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+  let failed;
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    verify(navigate);
+  }, [navigate]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (username === "" || password === "") {
+    if (email === "" || password === "") {
       return alert("Please fill in all the fields");
     }
 
-    console.log(username, password);
+    const result = await axios.post(
+      "http://localhost:5000/auth/login",
+      {
+        email,
+        password,
+      },
+      {
+        withCredentials: true,
+      }
+    );
+
+    failed = result.failed;
+
+    if (!failed) {
+      setEmail("");
+      setPassword("");
+    }
+
+    verify(navigate);
   };
 
   return (
@@ -22,18 +73,19 @@ const LoginForm = () => {
         <FaUser />
         Login Form
       </h3>
+      {failed && <p>Failed to login</p>}
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
-          <label htmlFor="name" className="form-label">
+          <label htmlFor="email" className="form-label">
             Username
           </label>
           <input
             type="text"
-            id="name"
+            id="email"
             className="form-control"
             autoComplete="off"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </div>
         <div className="mb-5">
