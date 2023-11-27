@@ -4,7 +4,7 @@ import { FaUser } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { verifyAuth } from "../utils/utilities";
 
-const LoginForm = () => {
+const LoginForm = ({ setAuthState }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -33,9 +33,10 @@ const LoginForm = () => {
     if (!failed) {
       setEmail("");
       setPassword("");
-    }
+      setAuthState(true);
 
-    verifyAuth(navigate, false);
+      verifyAuth(navigate, false);
+    }
   };
 
   return (

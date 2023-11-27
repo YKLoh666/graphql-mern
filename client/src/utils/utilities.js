@@ -7,11 +7,12 @@ export const verifyAuth = async (navigate, shouldAuth) => {
     });
 
     const { verified } = response.data;
-    let shouldNavigate = verified;
-    if (shouldAuth) shouldNavigate = !shouldNavigate;
 
-    if (shouldNavigate) {
-      // Token is verified, navigate to the desired location
+    if (shouldAuth === 0) {
+      return { verified };
+    } else if (shouldAuth === true && !verified) {
+      navigate("/login");
+    } else if (shouldAuth === false && verified) {
       navigate("/");
     }
   } catch (error) {

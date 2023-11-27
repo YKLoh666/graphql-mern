@@ -46,4 +46,16 @@ router.post("/login", async (req, res) => {
   }
 });
 
+router.post("/logout", async (req, res) => {
+  res.cookie("token", "", {
+    expires: new Date(),
+    sameSite: "strict",
+    httpOnly: true,
+    secure: process.env.NODE_ENV !== "development",
+  });
+  console.log("logged out");
+
+  return res.end();
+});
+
 export default router;
