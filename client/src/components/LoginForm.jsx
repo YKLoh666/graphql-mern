@@ -1,43 +1,14 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FaUser } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-
-const verify = async (navigate) => {
-  try {
-    const response = await axios.get("http://localhost:5000/auth", {
-      withCredentials: true,
-    });
-
-    const { verified } = response.data;
-
-    if (verified) {
-      // Token is verified, navigate to the desired location
-      navigate("/");
-    }
-  } catch (error) {
-    // Handle Axios request errors
-    console.error("Axios request failed:", error);
-
-    // Check the error response, if available
-    if (error.response) {
-      console.error("Error response data:", error.response.data);
-    }
-
-    // Handle the case where verification failed due to an error
-    console.log("Verification failed due to an error.");
-  }
-};
+import { verifyAuth } from "../utils/utilities";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   let failed;
-
-  useEffect(() => {
-    verify(navigate);
-  }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -64,7 +35,7 @@ const LoginForm = () => {
       setPassword("");
     }
 
-    verify(navigate);
+    verifyAuth(navigate, false);
   };
 
   return (

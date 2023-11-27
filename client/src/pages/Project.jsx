@@ -1,12 +1,20 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Spinner from "../components/Spinner";
 import { useQuery } from "@apollo/client";
 import { GET_PROJECT } from "../queries/projectQueries";
 import ClientInfo from "../components/ClientInfo";
 import DeleteProjectButton from "../components/DeleteProjectButton";
 import EditProjectForm from "../components/EditProjectForm";
+import { verifyAuth } from "../utils/utilities";
+import { useEffect } from "react";
 
 const Project = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    verifyAuth(navigate, true);
+  }, [navigate]);
+
   const { id } = useParams();
   const { loading, error, data } = useQuery(GET_PROJECT, { variables: { id } });
 
